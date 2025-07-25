@@ -1,0 +1,1665 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Personagem - Old Dragon</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e6e6e6;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(30, 30, 46, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #4a4a8a;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #8b0000 0%, #b22222 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 3px solid #ffd700;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+        
+        .points-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .export-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .export-btn {
+            background: #4a4a8a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .export-btn:hover {
+            background: #5a5a9a;
+            transform: translateY(-2px);
+        }
+        
+        .export-btn.save { background: #8b5cf6; }
+        .export-btn.save:hover { background: #7c3aed; }
+        
+        .export-btn.load { background: #0ea5e9; }
+        .export-btn.load:hover { background: #0284c7; }
+        
+        .export-btn.remove-image { background: #ef4444; }
+        .export-btn.remove-image:hover { background: #dc2626; }
+        
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            background: rgba(25, 25, 45, 0.9);
+            border-bottom: 2px solid #4a4a8a;
+        }
+        
+        .tab-button {
+            padding: 15px 25px;
+            background: transparent;
+            border: none;
+            color: #a0a0d0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-button:hover {
+            background: rgba(74, 74, 138, 0.3);
+            color: #ffffff;
+        }
+        
+        .tab-button.active {
+            background: rgba(74, 74, 138, 0.5);
+            color: #ffd700;
+            border-bottom: 3px solid #ffd700;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section {
+            background: rgba(40, 40, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #5a5a8a;
+        }
+        
+        .section-title {
+            color: #ffd700;
+            border-bottom: 2px solid #b22222;
+            padding-bottom: 12px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #a0a0d0;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #4a4a8a;
+            border-radius: 6px;
+            background: rgba(30, 30, 50, 0.8);
+            color: #e6e6e6;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #b22222;
+            box-shadow: 0 0 0 2px rgba(178, 34, 34, 0.3);
+        }
+        
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .attributes-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .attributes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .attribute-box {
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .attribute-box:hover {
+            transform: translateY(-5px);
+            background: rgba(60, 60, 90, 0.9);
+        }
+        
+        .attribute-name {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .attribute-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 10px 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modifier {
+            font-size: 1.1rem;
+            color: #a0d0a0;
+            margin-top: 8px;
+        }
+        
+        .modifiers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .modifier-item {
+            background: rgba(45, 45, 65, 0.8);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            border: 1px solid #5a5a8a;
+        }
+        
+        .modifier-value {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .combat-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a0a0d0;
+            margin-top: 5px;
+        }
+        
+        .derived-attributes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .derived-box {
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .derived-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #a0a0d0;
+            font-size: 0.9rem;
+            border-top: 1px solid #4a4a8a;
+            background: rgba(25, 25, 45, 0.8);
+        }
+        
+        .race-bonus {
+            font-size: 0.85rem;
+            color: #a0d0a0;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .total-attribute {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .base-value, .bonus-value {
+            font-size: 1.2rem;
+        }
+        
+        .bonus-value {
+            color: #a0d0a0;
+        }
+        
+        .separator {
+            color: #a0a0d0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .popup {
+            background: #2a2a4a;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid #b22222;
+            box-shadow: 0 0 30px rgba(178, 34, 34, 0.5);
+        }
+        
+        .popup h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .popup p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .popup-button {
+            background: #b22222;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .popup-button:hover {
+            background: #8b0000;
+        }
+        
+        /* Image Upload */
+        .image-upload {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .character-image-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            margin: 0 auto 15px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0a0d0;
+            font-size: 0.9rem;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .character-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-button {
+            background: #4a4a8a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        
+        .file-input-button:hover {
+            background: #5a5a9a;
+        }
+        
+        /* Equipment Grid */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .equipment-item {
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .equipment-name {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .equipment-details {
+            font-size: 0.9rem;
+            color: #a0a0d0;
+        }
+        
+        .equipment-weight {
+            font-size: 0.9rem;
+            color: #a0d0a0;
+            margin-top: 5px;
+        }
+        
+        /* Magic Section */
+        .spell-list {
+            background: rgba(40, 40, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #5a5a8a;
+            margin-bottom: 20px;
+        }
+        
+        .spell-level {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #4a4a8a;
+            padding-bottom: 5px;
+        }
+        
+        .spell-item {
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .spell-name {
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        
+        .spell-details {
+            font-size: 0.9rem;
+            color: #a0a0d0;
+        }
+        
+        /* Turn Undead Section */
+        .turn-undead-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(40, 40, 60, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .turn-undead-table th {
+            background: #8b0000;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .turn-undead-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #5a5a8a;
+        }
+        
+        .turn-undead-table tr:nth-child(even) {
+            background: rgba(50, 50, 70, 0.8);
+        }
+        
+        .turn-undead-table tr:hover {
+            background: rgba(60, 60, 90, 0.9);
+        }
+        
+        /* Thief Talents */
+        .talent-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .talent-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .talent-item {
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .talent-name {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .talent-description {
+            font-size: 0.95rem;
+            color: #a0a0d0;
+            line-height: 1.4;
+        }
+        
+        .talent-percentage {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #a0d0a0;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FICHA DE PERSONAGEM</h1>
+            <div class="subtitle">Old Dragon - Livro Básico Aprimorado</div>
+            <div class="points-counter">
+                Pontos Gastos: <span id="points-spent">0</span>/20
+            </div>
+            <div class="export-buttons">
+                <button class="export-btn save" onclick="saveCharacter()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+                <button class="export-btn load" onclick="loadCharacter()">
+                    <i class="fas fa-folder-open"></i> Carregar
+                </button>
+                <button class="export-btn remove-image" onclick="removeImage()">
+                    <i class="fas fa-trash"></i> Remover Imagem
+                </button>
+            </div>
+        </header>
+        
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'ficha')">Ficha</button>
+            <button class="tab-button" onclick="openTab(event, 'equipamentos')">Equipamentos</button>
+            <button class="tab-button" onclick="openTab(event, 'magia')">Magia</button>
+            <button class="tab-button" onclick="openTab(event, 'expulsar-mortos-vivos')">Expulsar Mortos-Vivos</button>
+            <button class="tab-button" onclick="openTab(event, 'talentos-ladrao')">Talentos de Ladrão</button>
+        </div>
+        
+        <!-- Ficha Tab -->
+        <div id="ficha" class="tab-content active">
+            <div class="content">
+                <div class="section">
+                    <h2 class="section-title">Dados Básicos</h2>
+                    
+                    <div class="image-upload">
+                        <div class="character-image-container">
+                            <img id="character-image" class="character-image hidden" src="" alt="Imagem do Personagem">
+                            <div id="character-image-placeholder">Imagem do Personagem</div>
+                        </div>
+                        <div class="file-input-wrapper">
+                            <div class="file-input-button">Escolher Imagem</div>
+                            <input type="file" id="character-image-upload" accept="image/*">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nome">Nome do Personagem:</label>
+                        <input type="text" id="nome" placeholder="Digite o nome do personagem">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="jogador">Nome do Jogador:</label>
+                        <input type="text" id="jogador" placeholder="Digite seu nome">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="raca">Raça:</label>
+                        <select id="raca">
+                            <option value="">Selecione uma raça</option>
+                            <option value="humano">Humano</option>
+                            <option value="anao">Anão</option>
+                            <option value="elfo">Elfo</option>
+                            <option value="halfling">Halfling</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="classe">Classe:</label>
+                        <select id="classe">
+                            <option value="">Selecione uma classe</option>
+                            <option value="clerigo">Clérigo</option>
+                            <option value="homem-de-armas">Homem de Armas</option>
+                            <option value="ladrao">Ladrão</option>
+                            <option value="mago">Mago</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nivel">Nível:</label>
+                        <input type="number" id="nivel" min="1" max="20" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="alinhamento">Alinhamento:</label>
+                        <select id="alinhamento">
+                            <option value="">Selecione um alinhamento</option>
+                            <option value="ordeiro">Ordeiro</option>
+                            <option value="neutro">Neutro</option>
+                            <option value="caotico">Caótico</option>
+                        </select>
+                    </div>
+                    
+                    <div id="especializacao-container" class="form-group hidden">
+                        <label for="especializacao">Especialização:</label>
+                        <select id="especializacao">
+                            <option value="">Selecione uma especialização</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">Atributos</h2>
+                    <div class="attributes-grid">
+                        <div class="attribute-box">
+                            <div class="attribute-name">FORÇA (FOR)</div>
+                            <select id="forca" class="attribute-select">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                            </select>
+                            <div class="total-attribute">
+                                <div class="base-value" id="forca-base">10</div>
+                                <div class="separator">+</div>
+                                <div class="bonus-value" id="forca-bonus">0</div>
+                                <div class="separator">=</div>
+                                <div class="attribute-value" id="forca-total">10</div>
+                            </div>
+                            <div class="modifier">Mod: <span id="forca-mod">0</span></div>
+                            <div class="race-bonus" id="forca-race"></div>
+                        </div>
+                        
+                        <div class="attribute-box">
+                            <div class="attribute-name">DESTREZA (DES)</div>
+                            <select id="destreza" class="attribute-select">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                            </select>
+                            <div class="total-attribute">
+                                <div class="base-value" id="destreza-base">10</div>
+                                <div class="separator">+</div>
+                                <div class="bonus-value" id="destreza-bonus">0</div>
+                                <div class="separator">=</div>
+                                <div class="attribute-value" id="destreza-total">10</div>
+                            </div>
+                            <div class="modifier">Mod: <span id="destreza-mod">0</span></div>
+                            <div class="race-bonus" id="destreza-race"></div>
+                        </div>
+                        
+                        <div class="attribute-box">
+                            <div class="attribute-name">CONSTITUIÇÃO (CON)</div>
+                            <select id="constituicao" class="attribute-select">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                            </select>
+                            <div class="total-attribute">
+                                <div class="base-value" id="constituicao-base">10</div>
+                                <div class="separator">+</div>
+                                <div class="bonus-value" id="constituicao-bonus">0</div>
+                                <div class="separator">=</div>
+                                <div class="attribute-value" id="constituicao-total">10</div>
+                            </div>
+                            <div class="modifier">Mod: <span id="constituicao-mod">0</span></div>
+                            <div class="race-bonus" id="constituicao-race"></div>
+                        </div>
+                        
+                        <div class="attribute-box">
+                            <div class="attribute-name">INTELIGÊNCIA (INT)</div>
+                            <select id="inteligencia" class="attribute-select">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                            </select>
+                            <div class="total-attribute">
+                                <div class="base-value" id="inteligencia-base">10</div>
+                                <div class="separator">+</div>
+                                <div class="bonus-value" id="inteligencia-bonus">0</div>
+                                <div class="separator">=</div>
+                                <div class="attribute-value" id="inteligencia-total">10</div>
+                            </div>
+                            <div class="modifier">Mod: <span id="inteligencia-mod">0</span></div>
+                            <div class="race-bonus" id="inteligencia-race"></div>
+                        </div>
+                        
+                        <div class="attribute-box">
+                            <div class="attribute-name">SABEDORIA (SAB)</div>
+                            <select id="sabedoria" class="attribute-select">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                            </select>
+                            <div class="total-attribute">
+                                <div class="base-value" id="sabedoria-base">10</div>
+                                <div class="separator">+</div>
+                                <div class="bonus-value" id="sabedoria-bonus">0</div>
+                                <div class="separator">=</div>
+                                <div class="attribute-value" id="sabedoria-total">10</div>
+                            </div>
+                            <div class="modifier">Mod: <span id="sabedoria-mod">0</span></div>
+                            <div class="race-bonus" id="sabedoria-race"></div>
+                        </div>
+                        
+                        <div class="attribute-box">
+                            <div class="attribute-name">CARISMA (CAR)</div>
+                            <select id="carisma" class="attribute-select">
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                            </select>
+                            <div class="total-attribute">
+                                <div class="base-value" id="carisma-base">10</div>
+                                <div class="separator">+</div>
+                                <div class="bonus-value" id="carisma-bonus">0</div>
+                                <div class="separator">=</div>
+                                <div class="attribute-value" id="carisma-total">10</div>
+                            </div>
+                            <div class="modifier">Mod: <span id="carisma-mod">0</span></div>
+                            <div class="race-bonus" id="carisma-race"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">Combate</h2>
+                    <div class="combat-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="ca">10</div>
+                            <div class="stat-label">CLASSE DE ARMADURA</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-value" id="ba">0</div>
+                            <div class="stat-label">BÔNUS DE ATAQUE</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-value" id="pv">8</div>
+                            <div class="stat-label">PONTOS DE VIDA</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 25px; color: #ffd700; text-align: center;">Jogadas de Proteção</h3>
+                    <div class="modifiers-grid">
+                        <div class="modifier-item">Morte/Veneno: <span class="modifier-value" id="jp-morte">0</span></div>
+                        <div class="modifier-item">Varas: <span class="modifier-value" id="jp-varas">0</span></div>
+                        <div class="modifier-item">Paralisia/Petrificação: <span class="modifier-value" id="jp-paralisia">0</span></div>
+                        <div class="modifier-item">Sopro: <span class="modifier-value" id="jp-sopro">0</span></div>
+                        <div class="modifier-item">Feitiços: <span class="modifier-value" id="jp-feiticos">0</span></div>
+                        <div class="modifier-item">Magia: <span class="modifier-value" id="jp-magia">0</span></div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">Atributos Derivados</h2>
+                    <div class="derived-attributes">
+                        <div class="derived-box">
+                            <div class="derived-value" id="movimentacao">9</div>
+                            <div class="stat-label">MOVIMENTAÇÃO (m/turno)</div>
+                        </div>
+                        
+                        <div class="derived-box">
+                            <div class="derived-value" id="idiomas">1</div>
+                            <div class="stat-label">IDIOMAS</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 25px; color: #ffd700; text-align: center;">Modificadores de Atributos</h3>
+                    <div class="modifiers-grid">
+                        <div class="modifier-item">Ataque Corpo-a-Corpo: <span class="modifier-value" id="mod-ataque-corpo">0</span></div>
+                        <div class="modifier-item">Ataque à Distância: <span class="modifier-value" id="mod-ataque-distancia">0</span></div>
+                        <div class="modifier-item">Dano Corpo-a-Corpo: <span class="modifier-value" id="mod-dano">0</span></div>
+                        <div class="modifier-item">Defesa: <span class="modifier-value" id="mod-defesa">0</span></div>
+                        <div class="modifier-item">Proteção: <span class="modifier-value" id="mod-protecao">0</span></div>
+                        <div class="modifier-item">Surpresa: <span class="modifier-value" id="mod-surpresa">0</span></div>
+                        <div class="modifier-item">Armadilhas: <span class="modifier-value" id="mod-armadilhas">0</span></div>
+                        <div class="modifier-item">Furtividade: <span class="modifier-value" id="mod-furtividade">0</span></div>
+                        <div class="modifier-item">Pungar: <span class="modifier-value" id="mod-pungar">0</span></div>
+                        <div class="modifier-item">Reação: <span class="modifier-value" id="mod-reacao">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Equipamentos Tab -->
+        <div id="equipamentos" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Equipamentos</h2>
+                <div class="equipment-grid">
+                    <div class="equipment-item">
+                        <div class="equipment-name">Adaga</div>
+                        <div class="equipment-details">Dano: 1d4 | Tipo: Perfurante</div>
+                        <div class="equipment-weight">Peso: 0,5 kg</div>
+                    </div>
+                    <div class="equipment-item">
+                        <div class="equipment-name">Espada Curta</div>
+                        <div class="equipment-details">Dano: 1d6 | Tipo: Cortante</div>
+                        <div class="equipment-weight">Peso: 1 kg</div>
+                    </div>
+                    <div class="equipment-item">
+                        <div class="equipment-name">Armadura de Couro</div>
+                        <div class="equipment-details">CA: +2 | Tipo: Leve</div>
+                        <div class="equipment-weight">Peso: 10 kg</div>
+                    </div>
+                    <div class="equipment-item">
+                        <div class="equipment-name">Escudo Pequeno</div>
+                        <div class="equipment-details">CA: +1 | Tipo: Escudo</div>
+                        <div class="equipment-weight">Peso: 2 kg</div>
+                    </div>
+                    <div class="equipment-item">
+                        <div class="equipment-name">Mochila</div>
+                        <div class="equipment-details">Capacidade: 30 kg</div>
+                        <div class="equipment-weight">Peso: 1 kg</div>
+                    </div>
+                    <div class="equipment-item">
+                        <div class="equipment-name">Tocha</div>
+                        <div class="equipment-details">Duração: 1 hora | Alcance: 6m</div>
+                        <div class="equipment-weight">Peso: 0,5 kg</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #ffd700; text-align: center;">Carga Total</h3>
+                <div class="derived-box" style="margin: 20px auto; max-width: 300px;">
+                    <div class="derived-value" id="carga-total">15</div>
+                    <div class="stat-label">QUILOS</div>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #ffd700; text-align: center;">Movimento Ajustado</h3>
+                <div class="derived-box" style="margin: 20px auto; max-width: 300px;">
+                    <div class="derived-value" id="movimento-ajustado">9</div>
+                    <div class="stat-label">METROS POR TURNO</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Magia Tab -->
+        <div id="magia" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Magias</h2>
+                
+                <div class="spell-list">
+                    <div class="spell-level">1º Círculo</div>
+                    <div class="spell-item">
+                        <div class="spell-name">Detectar Magia</div>
+                        <div class="spell-details">Alcance: 18m | Duração: 2 turnos | Escola: Adivinhação</div>
+                    </div>
+                    <div class="spell-item">
+                        <div class="spell-name">Luz</div>
+                        <div class="spell-details">Alcance: 36m | Duração: 6 turnos | Escola: Ilusão</div>
+                    </div>
+                    <div class="spell-item">
+                        <div class="spell-name">Sono</div>
+                        <div class="spell-details">Alcance: 36m | Duração: 2d8 turnos | Escola: Encantamento</div>
+                    </div>
+                </div>
+                
+                <div class="spell-list">
+                    <div class="spell-level">2º Círculo</div>
+                    <div class="spell-item">
+                        <div class="spell-name">Invisibilidade</div>
+                        <div class="spell-details">Alcance: Toque | Duração: Especial | Escola: Ilusão</div>
+                    </div>
+                    <div class="spell-item">
+                        <div class="spell-name">Levitação</div>
+                        <div class="spell-details">Alcance: Pessoal | Duração: 1d6 turnos | Escola: Transmutação</div>
+                    </div>
+                </div>
+                
+                <div class="spell-list">
+                    <div class="spell-level">3º Círculo</div>
+                    <div class="spell-item">
+                        <div class="spell-name">Bola de Fogo</div>
+                        <div class="spell-details">Alcance: 72m | Duração: Instantânea | Escola: Evocação</div>
+                    </div>
+                    <div class="spell-item">
+                        <div class="spell-name">Relâmpago</div>
+                        <div class="spell-details">Alcance: 36m linha | Duração: Instantânea | Escola: Evocação</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Expulsar Mortos-Vivos Tab -->
+        <div id="expulsar-mortos-vivos" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Expulsar Mortos-Vivos</h2>
+                <p style="text-align: center; margin-bottom: 20px; color: #a0a0d0;">
+                    O clérigo pode afastar mortos-vivos com sua fé. O número de vezes por dia é igual ao nível do personagem.
+                </p>
+                
+                <table class="turn-undead-table">
+                    <thead>
+                        <tr>
+                            <th>Nível do Clérigo</th>
+                            <th>Mortos-Vivos 1-3 DV</th>
+                            <th>Mortos-Vivos 4-6 DV</th>
+                            <th>Mortos-Vivos 7-9 DV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1º</td>
+                            <td>1d4</td>
+                            <td>1d2</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>2º</td>
+                            <td>1d6</td>
+                            <td>1d4</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>3º</td>
+                            <td>2d4</td>
+                            <td>1d6</td>
+                            <td>1d2</td>
+                        </tr>
+                        <tr>
+                            <td>4º</td>
+                            <td>2d6</td>
+                            <td>2d4</td>
+                            <td>1d4</td>
+                        </tr>
+                        <tr>
+                            <td>5º</td>
+                            <td>3d4</td>
+                            <td>2d6</td>
+                            <td>1d6</td>
+                        </tr>
+                        <tr>
+                            <td>6º</td>
+                            <td>3d6</td>
+                            <td>3d4</td>
+                            <td>2d4</td>
+                        </tr>
+                        <tr>
+                            <td>7º</td>
+                            <td>4d4</td>
+                            <td>3d6</td>
+                            <td>2d6</td>
+                        </tr>
+                        <tr>
+                            <td>8º</td>
+                            <td>4d6</td>
+                            <td>4d4</td>
+                            <td>3d4</td>
+                        </tr>
+                        <tr>
+                            <td>9º</td>
+                            <td>5d4</td>
+                            <td>4d6</td>
+                            <td>3d6</td>
+                        </tr>
+                        <tr>
+                            <td>10º</td>
+                            <td>5d6</td>
+                            <td>5d4</td>
+                            <td>4d4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px; text-align: center; color: #a0d0a0;">
+                    <p><strong>DV:</strong> Dados de Vida | <strong>—:</strong> Imune</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Talentos de Ladrão Tab -->
+        <div id="talentos-ladrao" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">Talentos de Ladrão</h2>
+                <p style="text-align: center; margin-bottom: 20px; color: #a0a0d0;">
+                    Os talentos de ladrão representam habilidades furtivas. As porcentagens são baseadas no nível do personagem.
+                </p>
+                
+                <div class="talent-grid">
+                    <div class="talent-item">
+                        <div class="talent-name">Arrombar Fechaduras</div>
+                        <div class="talent-description">
+                            Abrir fechaduras mecânicas com ferramentas de arrombamento.
+                        </div>
+                        <div class="talent-percentage" id="arrombar">15%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Desarmar Armadilhas</div>
+                        <div class="talent-description">
+                            Desativar armadilhas mecânicas e mágicas.
+                        </div>
+                        <div class="talent-percentage" id="desarmar">10%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Furtividade</div>
+                        <div class="talent-description">
+                            Mover-se silenciosamente sem ser detectado.
+                        </div>
+                        <div class="talent-percentage" id="furtividade">10%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Esconder-se</div>
+                        <div class="talent-description">
+                            Ocultar-se nas sombras ou atrás de objetos.
+                        </div>
+                        <div class="talent-percentage" id="esconder">5%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Ouvir Ruídos</div>
+                        <div class="talent-description">
+                            Detectar sons sutis através de portas ou paredes.
+                        </div>
+                        <div class="talent-percentage" id="ouvir">15%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Pungar</div>
+                        <div class="talent-description">
+                            Roubar itens de criaturas sem ser percebido.
+                        </div>
+                        <div class="talent-percentage" id="pungar">20%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Escalar Superfícies</div>
+                        <div class="talent-description">
+                            Subir paredes e superfícies íngremes.
+                        </div>
+                        <div class="talent-percentage" id="escalar">85%</div>
+                    </div>
+                    
+                    <div class="talent-item">
+                        <div class="talent-name">Falar Línguas</div>
+                        <div class="talent-description">
+                            Comunicar-se em dialetos e linguagens locais.
+                        </div>
+                        <div class="talent-percentage" id="falar">30%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Old Dragon - Sistema de RPG Baseado em Dados | Ficha Automatizada</p>
+        </div>
+    </div>
+    
+    <!-- Popup de aviso -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup">
+            <h2>Limite de Pontos Excedido!</h2>
+            <p>Você ultrapassou o limite de 20 pontos disponíveis para distribuição de atributos. O último atributo modificado será revertido para seu valor anterior.</p>
+            <button class="popup-button" id="popup-button">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Tabela de modificadores de atributos corrigida conforme manual Old Dragon (expandida até 29)
+        const modifiers = {
+            1: -5, 2: -4, 3: -4, 4: -3, 5: -3, 6: -2, 7: -2, 8: -1, 9: -1, 10: 0,
+            11: 0, 12: 1, 13: 1, 14: 2, 15: 2, 16: 3, 17: 3, 18: 4, 19: 4, 20: 5,
+            21: 5, 22: 6, 23: 6, 24: 7, 25: 7, 26: 8, 27: 8, 28: 9, 29: 9
+        };
+
+        // Custo dos atributos
+        const attributeCosts = {
+            3: -7, 4: -6, 5: -5, 6: -4, 7: -3, 8: -2, 9: -1, 10: 0,
+            11: 1, 12: 2, 13: 3, 14: 4, 15: 5, 16: 6, 17: 7, 18: 8
+        };
+
+        // Bônus raciais
+        const raceBonuses = {
+            humano: {
+                forca: 0, destreza: 0, constituicao: 0, inteligencia: 0, sabedoria: 0, carisma: 0,
+                movimentacao: 9, idiomas: 1
+            },
+            anao: {
+                forca: 0, destreza: 0, constituicao: 2, inteligencia: 0, sabedoria: 0, carisma: -2,
+                movimentacao: 6, idiomas: 0
+            },
+            elfo: {
+                forca: 0, destreza: 2, constituicao: -2, inteligencia: 0, sabedoria: 0, carisma: 0,
+                movimentacao: 9, idiomas: 0
+            },
+            halfling: {
+                forca: -2, destreza: 2, constituicao: 0, inteligencia: 0, sabedoria: 0, carisma: 0,
+                movimentacao: 6, idiomas: 0
+            }
+        };
+
+        // Dados de vida por classe
+        const classHitDice = {
+            clerigo: 8,
+            "homem-de-armas": 10,
+            ladrao: 6,
+            mago: 4
+        };
+
+        // Especializações por classe e nível
+        const especializacoes = {
+            clerigo: {
+                5: [
+                    { nome: "Druida", requisito: null },
+                    { nome: "Domínio Ordeiro", requisito: "ordeiro" },
+                    { nome: "Domínio Neutro", requisito: "neutro" },
+                    { nome: "Domínio Caótico", requisito: "caotico" }
+                ]
+            },
+            "homem-de-armas": {
+                5: [
+                    { nome: "Guerreiro", requisito: null },
+                    { nome: "Paladino", requisito: "ordeiro" },
+                    { nome: "Berserker", requisito: "caotico" }
+                ]
+            },
+            ladrao: {
+                5: [
+                    { nome: "Espião", requisito: null },
+                    { nome: "Explorador", requisito: null },
+                    { nome: "Sábio", requisito: null }
+                ]
+            },
+            mago: {
+                5: [
+                    { nome: "Ilusionista", requisito: null },
+                    { nome: "Necromante", requisito: null },
+                    { nome: "Encantador", requisito: null }
+                ]
+            }
+        };
+
+        // Variável para armazenar o elemento que causou o excesso
+        let lastChangedElement = null;
+        let previousValue = null;
+        let characterImage = null;
+
+        // Função para abrir/fechar tabs
+        function openTab(evt, tabName) {
+            // Esconder todas as tabs
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Remover classe ativa dos botões
+            const tabButtons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Mostrar a tab selecionada
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Função para calcular modificadores
+        function getModifier(value) {
+            return modifiers[value] || 0;
+        }
+
+        // Função para calcular custo dos atributos
+        function getAttributeCost(value) {
+            return attributeCosts[value] || 0;
+        }
+
+        // Função para calcular pontos gastos
+        function calculatePointsSpent() {
+            const forca = parseInt(document.getElementById('forca').value);
+            const destreza = parseInt(document.getElementById('destreza').value);
+            const constituicao = parseInt(document.getElementById('constituicao').value);
+            const inteligencia = parseInt(document.getElementById('inteligencia').value);
+            const sabedoria = parseInt(document.getElementById('sabedoria').value);
+            const carisma = parseInt(document.getElementById('carisma').value);
+            
+            const totalCost = getAttributeCost(forca) + getAttributeCost(destreza) + 
+                             getAttributeCost(constituicao) + getAttributeCost(inteligencia) + 
+                             getAttributeCost(sabedoria) + getAttributeCost(carisma);
+            
+            document.getElementById('points-spent').textContent = totalCost;
+            
+            return totalCost;
+        }
+
+        // Função para mostrar popup
+        function showPopup() {
+            document.getElementById('popup-overlay').style.display = 'flex';
+        }
+
+        // Função para fechar popup e reverter valor
+        function closePopup() {
+            document.getElementById('popup-overlay').style.display = 'none';
+            
+            // Reverter o valor do atributo
+            if (lastChangedElement && previousValue !== null) {
+                lastChangedElement.value = previousValue;
+                updateCalculations(); // Atualizar novamente após reverter
+            }
+        }
+
+        // Função para salvar personagem
+        function saveCharacter() {
+            const characterData = {
+                nome: document.getElementById('nome').value,
+                jogador: document.getElementById('jogador').value,
+                raca: document.getElementById('raca').value,
+                classe: document.getElementById('classe').value,
+                nivel: document.getElementById('nivel').value,
+                alinhamento: document.getElementById('alinhamento').value,
+                especializacao: document.getElementById('especializacao').value,
+                forca: document.getElementById('forca').value,
+                destreza: document.getElementById('destreza').value,
+                constituicao: document.getElementById('constituicao').value,
+                inteligencia: document.getElementById('inteligencia').value,
+                sabedoria: document.getElementById('sabedoria').value,
+                carisma: document.getElementById('carisma').value,
+                characterImage: characterImage
+            };
+            
+            localStorage.setItem('oldDragonCharacter', JSON.stringify(characterData));
+            alert('Personagem salvo com sucesso!');
+        }
+
+        // Função para carregar personagem
+        function loadCharacter() {
+            const savedData = localStorage.getItem('oldDragonCharacter');
+            if (savedData) {
+                const characterData = JSON.parse(savedData);
+                
+                document.getElementById('nome').value = characterData.nome || '';
+                document.getElementById('jogador').value = characterData.jogador || '';
+                document.getElementById('raca').value = characterData.raca || '';
+                document.getElementById('classe').value = characterData.classe || '';
+                document.getElementById('nivel').value = characterData.nivel || '1';
+                document.getElementById('alinhamento').value = characterData.alinhamento || '';
+                document.getElementById('especializacao').value = characterData.especializacao || '';
+                document.getElementById('forca').value = characterData.forca || '10';
+                document.getElementById('destreza').value = characterData.destreza || '10';
+                document.getElementById('constituicao').value = characterData.constituicao || '10';
+                document.getElementById('inteligencia').value = characterData.inteligencia || '10';
+                document.getElementById('sabedoria').value = characterData.sabedoria || '10';
+                document.getElementById('carisma').value = characterData.carisma || '10';
+                
+                // Carregar imagem se existir
+                if (characterData.characterImage) {
+                    characterImage = characterData.characterImage;
+                    document.getElementById('character-image').src = characterImage;
+                    document.getElementById('character-image').classList.remove('hidden');
+                    document.getElementById('character-image-placeholder').style.display = 'none';
+                }
+                
+                updateCalculations();
+                alert('Personagem carregado com sucesso!');
+            } else {
+                alert('Nenhum personagem salvo encontrado.');
+            }
+        }
+
+        // Função para remover imagem
+        function removeImage() {
+            characterImage = null;
+            document.getElementById('character-image').src = '';
+            document.getElementById('character-image').classList.add('hidden');
+            document.getElementById('character-image-placeholder').style.display = 'flex';
+            document.getElementById('character-image-upload').value = '';
+        }
+
+        // Função para atualizar os bônus raciais
+        function updateRaceBonuses() {
+            const raca = document.getElementById('raca').value;
+            const bonuses = raceBonuses[raca] || raceBonuses.humano;
+            
+            // Atualizar exibição dos bônus raciais
+            document.getElementById('forca-race').textContent = bonuses.forca !== 0 ? `Bônus: ${bonuses.forca >= 0 ? '+' : ''}${bonuses.forca}` : '';
+            document.getElementById('destreza-race').textContent = bonuses.destreza !== 0 ? `Bônus: ${bonuses.destreza >= 0 ? '+' : ''}${bonuses.destreza}` : '';
+            document.getElementById('constituicao-race').textContent = bonuses.constituicao !== 0 ? `Bônus: ${bonuses.constituicao >= 0 ? '+' : ''}${bonuses.constituicao}` : '';
+            document.getElementById('inteligencia-race').textContent = bonuses.inteligencia !== 0 ? `Bônus: ${bonuses.inteligencia >= 0 ? '+' : ''}${bonuses.inteligencia}` : '';
+            document.getElementById('sabedoria-race').textContent = bonuses.sabedoria !== 0 ? `Bônus: ${bonuses.sabedoria >= 0 ? '+' : ''}${bonuses.sabedoria}` : '';
+            document.getElementById('carisma-race').textContent = bonuses.carisma !== 0 ? `Bônus: ${bonuses.carisma >= 0 ? '+' : ''}${bonuses.carisma}` : '';
+            
+            return bonuses;
+        }
+
+        // Função para atualizar especializações
+        function updateEspecializacoes() {
+            const classe = document.getElementById('classe').value;
+            const nivel = parseInt(document.getElementById('nivel').value) || 1;
+            const alinhamento = document.getElementById('alinhamento').value;
+            const container = document.getElementById('especializacao-container');
+            const select = document.getElementById('especializacao');
+            
+            // Limpar opções anteriores
+            select.innerHTML = '<option value="">Selecione uma especialização</option>';
+            
+            // Verificar se a classe tem especializações e se o nível é suficiente
+            if (classe && especializacoes[classe] && nivel >= 5) {
+                // Mostrar o container de especializações
+                container.classList.remove('hidden');
+                
+                // Adicionar especializações disponíveis
+                const especs = especializacoes[classe][5] || [];
+                especs.forEach(espec => {
+                    // Verificar se o requisito de alinhamento é atendido (se houver)
+                    if (!espec.requisito || espec.requisito === alinhamento) {
+                        const option = document.createElement('option');
+                        option.value = espec.nome.toLowerCase().replace(/\s+/g, '-');
+                        option.textContent = espec.nome;
+                        select.appendChild(option);
+                    }
+                });
+            } else {
+                // Esconder o container de especializações
+                container.classList.add('hidden');
+            }
+        }
+
+        // Função para calcular pontos de vida conforme regras do Old Dragon
+        function calculateHitPoints(classe, nivel, conModifier) {
+            // No 1º nível, cada personagem recebe o dado "cheio" + modificador de Constituição
+            // Ao subir de nível, o jogador deverá rolar o dado de vida da classe e somar o modificador de Constituição
+            // Considerando que o jogador sempre tire o maior resultado ao passar de nível
+            
+            const hitDice = classHitDice[classe] || 8; // d8 por padrão
+            
+            // Nível 1: valor máximo do dado + modificador de CON
+            let pv = hitDice + conModifier;
+            
+            // Níveis subsequentes: sempre o máximo do dado + modificador de CON
+            if (nivel > 1) {
+                pv += (hitDice + conModifier) * (nivel - 1);
+            }
+            
+            // Garantir que o PV mínimo seja 1
+            return Math.max(1, pv);
+        }
+
+        // Função para lidar com upload de imagem
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    characterImage = e.target.result;
+                    document.getElementById('character-image').src = characterImage;
+                    document.getElementById('character-image').classList.remove('hidden');
+                    document.getElementById('character-image-placeholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Função para atualizar todos os cálculos
+        function updateCalculations() {
+            // Obter valores dos atributos base
+            const forcaBase = parseInt(document.getElementById('forca').value);
+            const destrezaBase = parseInt(document.getElementById('destreza').value);
+            const constituicaoBase = parseInt(document.getElementById('constituicao').value);
+            const inteligenciaBase = parseInt(document.getElementById('inteligencia').value);
+            const sabedoriaBase = parseInt(document.getElementById('sabedoria').value);
+            const carismaBase = parseInt(document.getElementById('carisma').value);
+            
+            // Atualizar bônus raciais
+            const bonuses = updateRaceBonuses();
+            
+            // Calcular valores totais (base + bônus racial)
+            const forcaTotal = forcaBase + bonuses.forca;
+            const destrezaTotal = destrezaBase + bonuses.destreza;
+            const constituicaoTotal = constituicaoBase + bonuses.constituicao;
+            const inteligenciaTotal = inteligenciaBase + bonuses.inteligencia;
+            const sabedoriaTotal = sabedoriaBase + bonuses.sabedoria;
+            const carismaTotal = carismaBase + bonuses.carisma;
+            
+            // Atualizar valores totais e modificadores
+            document.getElementById('forca-base').textContent = forcaBase;
+            document.getElementById('forca-bonus').textContent = bonuses.forca >= 0 ? `+${bonuses.forca}` : bonuses.forca;
+            document.getElementById('forca-total').textContent = forcaTotal;
+            document.getElementById('forca-mod').textContent = getModifier(forcaTotal) >= 0 ? `+${getModifier(forcaTotal)}` : getModifier(forcaTotal);
+            
+            document.getElementById('destreza-base').textContent = destrezaBase;
+            document.getElementById('destreza-bonus').textContent = bonuses.destreza >= 0 ? `+${bonuses.destreza}` : bonuses.destreza;
+            document.getElementById('destreza-total').textContent = destrezaTotal;
+            document.getElementById('destreza-mod').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            
+            document.getElementById('constituicao-base').textContent = constituicaoBase;
+            document.getElementById('constituicao-bonus').textContent = bonuses.constituicao >= 0 ? `+${bonuses.constituicao}` : bonuses.constituicao;
+            document.getElementById('constituicao-total').textContent = constituicaoTotal;
+            document.getElementById('constituicao-mod').textContent = getModifier(constituicaoTotal) >= 0 ? `+${getModifier(constituicaoTotal)}` : getModifier(constituicaoTotal);
+            
+            document.getElementById('inteligencia-base').textContent = inteligenciaBase;
+            document.getElementById('inteligencia-bonus').textContent = bonuses.inteligencia >= 0 ? `+${bonuses.inteligencia}` : bonuses.inteligencia;
+            document.getElementById('inteligencia-total').textContent = inteligenciaTotal;
+            document.getElementById('inteligencia-mod').textContent = getModifier(inteligenciaTotal) >= 0 ? `+${getModifier(inteligenciaTotal)}` : getModifier(inteligenciaTotal);
+            
+            document.getElementById('sabedoria-base').textContent = sabedoriaBase;
+            document.getElementById('sabedoria-bonus').textContent = bonuses.sabedoria >= 0 ? `+${bonuses.sabedoria}` : bonuses.sabedoria;
+            document.getElementById('sabedoria-total').textContent = sabedoriaTotal;
+            document.getElementById('sabedoria-mod').textContent = getModifier(sabedoriaTotal) >= 0 ? `+${getModifier(sabedoriaTotal)}` : getModifier(sabedoriaTotal);
+            
+            document.getElementById('carisma-base').textContent = carismaBase;
+            document.getElementById('carisma-bonus').textContent = bonuses.carisma >= 0 ? `+${bonuses.carisma}` : bonuses.carisma;
+            document.getElementById('carisma-total').textContent = carismaTotal;
+            document.getElementById('carisma-mod').textContent = getModifier(carismaTotal) >= 0 ? `+${getModifier(carismaTotal)}` : getModifier(carismaTotal);
+            
+            // Calcular Classe de Armadura (10 + modificador de Destreza)
+            const ca = 10 + getModifier(destrezaTotal);
+            document.getElementById('ca').textContent = ca;
+            
+            // Calcular Bônus de Ataque (modificador de Força para corpo-a-corpo)
+            const ba = getModifier(forcaTotal);
+            document.getElementById('ba').textContent = ba >= 0 ? `+${ba}` : ba;
+            
+            // Calcular Pontos de Vida
+            const classe = document.getElementById('classe').value;
+            const nivel = parseInt(document.getElementById('nivel').value) || 1;
+            const conModifier = getModifier(constituicaoTotal);
+            const pv = calculateHitPoints(classe, nivel, conModifier);
+            document.getElementById('pv').textContent = pv;
+            
+            // Calcular Jogadas de Proteção
+            document.getElementById('jp-morte').textContent = getModifier(constituicaoTotal) >= 0 ? `+${getModifier(constituicaoTotal)}` : getModifier(constituicaoTotal);
+            document.getElementById('jp-varas').textContent = getModifier(constituicaoTotal) >= 0 ? `+${getModifier(constituicaoTotal)}` : getModifier(constituicaoTotal);
+            document.getElementById('jp-paralisia').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('jp-sopro').textContent = getModifier(constituicaoTotal) >= 0 ? `+${getModifier(constituicaoTotal)}` : getModifier(constituicaoTotal);
+            document.getElementById('jp-feiticos').textContent = getModifier(sabedoriaTotal) >= 0 ? `+${getModifier(sabedoriaTotal)}` : getModifier(sabedoriaTotal);
+            document.getElementById('jp-magia').textContent = getModifier(inteligenciaTotal) >= 0 ? `+${getModifier(inteligenciaTotal)}` : getModifier(inteligenciaTotal);
+            
+            // Calcular Movimentação
+            document.getElementById('movimentacao').textContent = bonuses.movimentacao || 9;
+            
+            // Calcular Idiomas (1 + modificador de Inteligência + bônus racial, mínimo 1)
+            const idiomas = 1 + Math.max(0, getModifier(inteligenciaTotal)) + (bonuses.idiomas || 0);
+            document.getElementById('idiomas').textContent = idiomas;
+            
+            // Modificadores de atributos específicos
+            document.getElementById('mod-ataque-corpo').textContent = getModifier(forcaTotal) >= 0 ? `+${getModifier(forcaTotal)}` : getModifier(forcaTotal);
+            document.getElementById('mod-ataque-distancia').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('mod-dano').textContent = getModifier(forcaTotal) >= 0 ? `+${getModifier(forcaTotal)}` : getModifier(forcaTotal);
+            document.getElementById('mod-defesa').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('mod-protecao').textContent = getModifier(constituicaoTotal) >= 0 ? `+${getModifier(constituicaoTotal)}` : getModifier(constituicaoTotal);
+            document.getElementById('mod-surpresa').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('mod-armadilhas').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('mod-furtividade').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('mod-pungar').textContent = getModifier(destrezaTotal) >= 0 ? `+${getModifier(destrezaTotal)}` : getModifier(destrezaTotal);
+            document.getElementById('mod-reacao').textContent = getModifier(carismaTotal) >= 0 ? `+${getModifier(carismaTotal)}` : getModifier(carismaTotal);
+            
+            // Atualizar especializações
+            updateEspecializacoes();
+            
+            // Verificar limite de pontos
+            const pointsSpent = calculatePointsSpent();
+            if (pointsSpent > 20) {
+                showPopup();
+            }
+        }
+
+        // Adicionar event listeners para todos os selects
+        document.querySelectorAll('select').forEach(element => {
+            // Armazenar o valor anterior antes da mudança
+            element.addEventListener('focus', function() {
+                previousValue = this.value;
+                lastChangedElement = this;
+            });
+            
+            element.addEventListener('change', updateCalculations);
+        });
+
+        // Event listener para o botão do popup
+        document.getElementById('popup-button').addEventListener('click', closePopup);
+
+        // Event listener para upload de imagem
+        document.getElementById('character-image-upload').addEventListener('change', handleImageUpload);
+
+        // Inicializar cálculos
+        updateCalculations();
+    </script>
+</body>
+</html>
+```
