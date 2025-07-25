@@ -101,8 +101,9 @@
         /* Tab Navigation */
         .tabs {
             display: flex;
-            background: rgba(25, 25, 45, 0.9);
+            background: rgba(25, 25, 45, 0.8);
             border-bottom: 2px solid #4a4a8a;
+            overflow-x: auto;
         }
         
         .tab-button {
@@ -115,6 +116,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
+            white-space: nowrap;
         }
         
         .tab-button:hover {
@@ -141,6 +143,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 25px;
+            padding: 25px;
         }
         
         @media (max-width: 900px) {
@@ -178,7 +181,7 @@
             color: #a0a0d0;
         }
         
-        select, input {
+        select, input, textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #4a4a8a;
@@ -189,7 +192,7 @@
             transition: all 0.3s ease;
         }
         
-        select:focus, input:focus {
+        select:focus, input:focus, textarea:focus {
             outline: none;
             border-color: #b22222;
             box-shadow: 0 0 0 2px rgba(178, 34, 34, 0.3);
@@ -438,7 +441,6 @@
             position: relative;
             overflow: hidden;
             display: inline-block;
-            margin-bottom: 10px;
         }
         
         .file-input-wrapper input[type=file] {
@@ -465,87 +467,220 @@
             background: #5a5a9a;
         }
         
-        /* Equipment Grid */
-        .equipment-grid {
+        /* Equipment and Spells */
+        .item-list {
+            margin-top: 20px;
+        }
+        
+        .item-entry {
+            background: rgba(45, 45, 65, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .item-name {
+            font-weight: bold;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+        
+        .remove-item {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .remove-item:hover {
+            background: #dc2626;
+        }
+        
+        .item-details {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .item-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .detail-label {
+            color: #a0a0d0;
+        }
+        
+        .detail-value {
+            color: #a0d0a0;
+            font-weight: bold;
+        }
+        
+        .add-item-form {
+            background: rgba(45, 45, 65, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
         @media (max-width: 768px) {
-            .equipment-grid {
+            .form-row {
                 grid-template-columns: 1fr;
             }
         }
         
-        .equipment-item {
-            background: rgba(50, 50, 70, 0.8);
-            border: 1px solid #5a5a8a;
-            border-radius: 10px;
-            padding: 15px;
-        }
-        
-        .equipment-name {
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-        
-        .equipment-details {
-            font-size: 0.9rem;
-            color: #a0a0d0;
-        }
-        
-        .equipment-weight {
-            font-size: 0.9rem;
-            color: #a0d0a0;
-            margin-top: 5px;
-        }
-        
-        /* Magic Section */
-        .spell-list {
-            background: rgba(40, 40, 60, 0.7);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #5a5a8a;
-            margin-bottom: 20px;
-        }
-        
-        .spell-level {
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            border-bottom: 1px solid #4a4a8a;
-            padding-bottom: 5px;
-        }
-        
-        .spell-item {
-            background: rgba(50, 50, 70, 0.8);
-            border: 1px solid #5a5a8a;
+        .add-item-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 20px;
             border-radius: 6px;
-            padding: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .add-item-button:hover {
+            background: #059669;
+        }
+        
+        /* Spell List */
+        .spell-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .spell-card {
+            background: rgba(45, 45, 65, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .spell-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 10px;
         }
         
         .spell-name {
             font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 5px;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+        
+        .spell-circle {
+            background: #8b0000;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
         
         .spell-details {
             font-size: 0.9rem;
+            line-height: 1.4;
             color: #a0a0d0;
         }
         
-        /* Turn Undead Section */
+        .spell-detail {
+            margin-bottom: 8px;
+        }
+        
+        .spell-detail strong {
+            color: #a0d0a0;
+        }
+        
+        .remove-spell {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .remove-spell:hover {
+            background: #dc2626;
+        }
+        
+        .add-spell-form {
+            background: rgba(45, 45, 65, 0.8);
+            border: 1px solid #5a5a8a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .spell-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .spell-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .add-spell-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .add-spell-button:hover {
+            background: #059669;
+        }
+        
+        /* Turn Undead Table */
         .turn-undead-table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
             background: rgba(40, 40, 60, 0.7);
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
         }
         
@@ -559,15 +694,15 @@
         .turn-undead-table td {
             padding: 10px;
             text-align: center;
-            border: 1px solid #5a5a8a;
+            border: 1px solid #4a4a8a;
         }
         
         .turn-undead-table tr:nth-child(even) {
-            background: rgba(50, 50, 70, 0.8);
+            background: rgba(50, 50, 70, 0.6);
         }
         
         .turn-undead-table tr:hover {
-            background: rgba(60, 60, 90, 0.9);
+            background: rgba(60, 60, 90, 0.8);
         }
         
         /* Thief Talents */
@@ -575,6 +710,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-top: 20px;
         }
         
         @media (max-width: 768px) {
@@ -584,31 +720,31 @@
         }
         
         .talent-item {
-            background: rgba(50, 50, 70, 0.8);
+            background: rgba(45, 45, 65, 0.8);
             border: 1px solid #5a5a8a;
-            border-radius: 10px;
+            border-radius: 6px;
             padding: 15px;
+            text-align: center;
         }
         
         .talent-name {
             font-weight: bold;
             color: #ffd700;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-size: 1.1rem;
         }
         
         .talent-description {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #a0a0d0;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
         
         .talent-percentage {
-            font-size: 1.2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #a0d0a0;
-            margin-top: 10px;
-            text-align: center;
         }
     </style>
 </head>
@@ -970,49 +1106,52 @@
         <div id="equipamentos" class="tab-content">
             <div class="section">
                 <h2 class="section-title">Equipamentos</h2>
-                <div class="equipment-grid">
-                    <div class="equipment-item">
-                        <div class="equipment-name">Adaga</div>
-                        <div class="equipment-details">Dano: 1d4 | Tipo: Perfurante</div>
-                        <div class="equipment-weight">Peso: 0,5 kg</div>
-                    </div>
-                    <div class="equipment-item">
-                        <div class="equipment-name">Espada Curta</div>
-                        <div class="equipment-details">Dano: 1d6 | Tipo: Cortante</div>
-                        <div class="equipment-weight">Peso: 1 kg</div>
-                    </div>
-                    <div class="equipment-item">
-                        <div class="equipment-name">Armadura de Couro</div>
-                        <div class="equipment-details">CA: +2 | Tipo: Leve</div>
-                        <div class="equipment-weight">Peso: 10 kg</div>
-                    </div>
-                    <div class="equipment-item">
-                        <div class="equipment-name">Escudo Pequeno</div>
-                        <div class="equipment-details">CA: +1 | Tipo: Escudo</div>
-                        <div class="equipment-weight">Peso: 2 kg</div>
-                    </div>
-                    <div class="equipment-item">
-                        <div class="equipment-name">Mochila</div>
-                        <div class="equipment-details">Capacidade: 30 kg</div>
-                        <div class="equipment-weight">Peso: 1 kg</div>
-                    </div>
-                    <div class="equipment-item">
-                        <div class="equipment-name">Tocha</div>
-                        <div class="equipment-details">Duração: 1 hora | Alcance: 6m</div>
-                        <div class="equipment-weight">Peso: 0,5 kg</div>
-                    </div>
+                
+                <div class="item-list" id="equipment-list">
+                    <!-- Lista de equipamentos será preenchida dinamicamente -->
                 </div>
                 
-                <h3 style="margin-top: 30px; color: #ffd700; text-align: center;">Carga Total</h3>
-                <div class="derived-box" style="margin: 20px auto; max-width: 300px;">
-                    <div class="derived-value" id="carga-total">15</div>
-                    <div class="stat-label">QUILOS</div>
+                <div class="add-item-form">
+                    <h3 style="color: #ffd700; margin-bottom: 15px; text-align: center;">Adicionar Novo Equipamento</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-equipment-name">Nome:</label>
+                            <input type="text" id="new-equipment-name" placeholder="Nome do equipamento">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-equipment-type">Tipo:</label>
+                            <select id="new-equipment-type">
+                                <option value="arma">Arma</option>
+                                <option value="armadura">Armadura</option>
+                                <option value="escudo">Escudo</option>
+                                <option value="consumivel">Consumível</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-equipment-weight">Peso (kg):</label>
+                            <input type="number" id="new-equipment-weight" step="0.1" placeholder="Peso do item">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-equipment-bonus">Bônus:</label>
+                            <input type="text" id="new-equipment-bonus" placeholder="Bônus (ex: +1 CA)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-equipment-description">Descrição:</label>
+                        <textarea id="new-equipment-description" rows="2" placeholder="Descrição do equipamento"></textarea>
+                    </div>
+                    <button class="add-item-button" onclick="addEquipment()">Adicionar Equipamento</button>
                 </div>
                 
-                <h3 style="margin-top: 30px; color: #ffd700; text-align: center;">Movimento Ajustado</h3>
-                <div class="derived-box" style="margin: 20px auto; max-width: 300px;">
-                    <div class="derived-value" id="movimento-ajustado">9</div>
-                    <div class="stat-label">METROS POR TURNO</div>
+                <div style="margin-top: 30px; text-align: center;">
+                    <h3 style="color: #ffd700; margin-bottom: 15px;">Carga Total</h3>
+                    <div class="derived-box" style="margin: 0 auto; max-width: 300px;">
+                        <div class="derived-value" id="carga-total">0</div>
+                        <div class="stat-label">QUILOS</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1022,44 +1161,47 @@
             <div class="section">
                 <h2 class="section-title">Magias</h2>
                 
-                <div class="spell-list">
-                    <div class="spell-level">1º Círculo</div>
-                    <div class="spell-item">
-                        <div class="spell-name">Detectar Magia</div>
-                        <div class="spell-details">Alcance: 18m | Duração: 2 turnos | Escola: Adivinhação</div>
-                    </div>
-                    <div class="spell-item">
-                        <div class="spell-name">Luz</div>
-                        <div class="spell-details">Alcance: 36m | Duração: 6 turnos | Escola: Ilusão</div>
-                    </div>
-                    <div class="spell-item">
-                        <div class="spell-name">Sono</div>
-                        <div class="spell-details">Alcance: 36m | Duração: 2d8 turnos | Escola: Encantamento</div>
-                    </div>
+                <div class="spell-grid" id="spell-list">
+                    <!-- Lista de magias será preenchida dinamicamente -->
                 </div>
                 
-                <div class="spell-list">
-                    <div class="spell-level">2º Círculo</div>
-                    <div class="spell-item">
-                        <div class="spell-name">Invisibilidade</div>
-                        <div class="spell-details">Alcance: Toque | Duração: Especial | Escola: Ilusão</div>
+                <div class="add-spell-form">
+                    <h3 style="color: #ffd700; margin-bottom: 15px; text-align: center;">Adicionar Nova Magia</h3>
+                    <div class="spell-form-row">
+                        <div class="form-group">
+                            <label for="new-spell-name">Nome:</label>
+                            <input type="text" id="new-spell-name" placeholder="Nome da magia">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-spell-circle">Círculo:</label>
+                            <select id="new-spell-circle">
+                                <option value="1">1º Círculo</option>
+                                <option value="2">2º Círculo</option>
+                                <option value="3">3º Círculo</option>
+                                <option value="4">4º Círculo</option>
+                                <option value="5">5º Círculo</option>
+                                <option value="6">6º Círculo</option>
+                                <option value="7">7º Círculo</option>
+                                <option value="8">8º Círculo</option>
+                                <option value="9">9º Círculo</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="spell-item">
-                        <div class="spell-name">Levitação</div>
-                        <div class="spell-details">Alcance: Pessoal | Duração: 1d6 turnos | Escola: Transmutação</div>
+                    <div class="spell-form-row">
+                        <div class="form-group">
+                            <label for="new-spell-range">Alcance:</label>
+                            <input type="text" id="new-spell-range" placeholder="Alcance da magia">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-spell-duration">Duração:</label>
+                            <input type="text" id="new-spell-duration" placeholder="Duração da magia">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="spell-list">
-                    <div class="spell-level">3º Círculo</div>
-                    <div class="spell-item">
-                        <div class="spell-name">Bola de Fogo</div>
-                        <div class="spell-details">Alcance: 72m | Duração: Instantânea | Escola: Evocação</div>
+                    <div class="form-group">
+                        <label for="new-spell-description">Descrição:</label>
+                        <textarea id="new-spell-description" rows="3" placeholder="Descrição da magia"></textarea>
                     </div>
-                    <div class="spell-item">
-                        <div class="spell-name">Relâmpago</div>
-                        <div class="spell-details">Alcance: 36m linha | Duração: Instantânea | Escola: Evocação</div>
-                    </div>
+                    <button class="add-spell-button" onclick="addSpell()">Adicionar Magia</button>
                 </div>
             </div>
         </div>
@@ -1242,11 +1384,11 @@
     </div>
 
     <script>
-        // Tabela de modificadores de atributos corrigida conforme manual Old Dragon (expandida até 29)
+        // Tabela de modificadores de atributos corrigida conforme manual Old Dragon
         const modifiers = {
-            1: -5, 2: -4, 3: -4, 4: -3, 5: -3, 6: -2, 7: -2, 8: -1, 9: -1, 10: 0,
-            11: 0, 12: 1, 13: 1, 14: 2, 15: 2, 16: 3, 17: 3, 18: 4, 19: 4, 20: 5,
-            21: 5, 22: 6, 23: 6, 24: 7, 25: 7, 26: 8, 27: 8, 28: 9, 29: 9
+            1: -5, 2: -4, 3: -3, 4: -2, 5: -2, 6: -1, 7: -1, 8: -1, 9: 0, 10: 0,
+            11: 0, 12: 0, 13: 1, 14: 1, 15: 1, 16: 2, 17: 2, 18: 3, 19: 3, 20: 4,
+            21: 4, 22: 5, 23: 5, 24: 6, 25: 6
         };
 
         // Custo dos atributos
@@ -1316,6 +1458,12 @@
             }
         };
 
+        // Lista de equipamentos
+        let equipments = [];
+
+        // Lista de magias
+        let spells = [];
+
         // Variável para armazenar o elemento que causou o excesso
         let lastChangedElement = null;
         let previousValue = null;
@@ -1338,6 +1486,51 @@
             // Mostrar a tab selecionada
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
+            
+            // Verificar se devemos mostrar/esconder tabs especiais
+            checkSpecialTabs();
+        }
+
+        // Função para verificar e mostrar/esconder tabs especiais
+        function checkSpecialTabs() {
+            const classe = document.getElementById('classe').value;
+            const nivel = parseInt(document.getElementById('nivel').value) || 1;
+            
+            // Tab de Magia - mostrar apenas para mago e clérigo
+            const magiaTab = document.querySelector('[onclick="openTab(event, \'magia\')"]');
+            if (classe === 'mago' || classe === 'clerigo') {
+                magiaTab.style.display = 'block';
+            } else {
+                magiaTab.style.display = 'none';
+                // Se a tab atual for magia, voltar para ficha
+                if (document.getElementById('magia').classList.contains('active')) {
+                    openTab({currentTarget: document.querySelector('[onclick="openTab(event, \'ficha\')"]')}, 'ficha');
+                }
+            }
+            
+            // Tab de Expulsar Mortos-Vivos - mostrar apenas para clérigo
+            const expulsarTab = document.querySelector('[onclick="openTab(event, \'expulsar-mortos-vivos\')"]');
+            if (classe === 'clerigo') {
+                expulsarTab.style.display = 'block';
+            } else {
+                expulsarTab.style.display = 'none';
+                // Se a tab atual for expulsar, voltar para ficha
+                if (document.getElementById('expulsar-mortos-vivos').classList.contains('active')) {
+                    openTab({currentTarget: document.querySelector('[onclick="openTab(event, \'ficha\')"]')}, 'ficha');
+                }
+            }
+            
+            // Tab de Talentos de Ladrão - mostrar apenas para ladrão
+            const talentosTab = document.querySelector('[onclick="openTab(event, \'talentos-ladrao\')"]');
+            if (classe === 'ladrao') {
+                talentosTab.style.display = 'block';
+            } else {
+                talentosTab.style.display = 'none';
+                // Se a tab atual for talentos, voltar para ficha
+                if (document.getElementById('talentos-ladrao').classList.contains('active')) {
+                    openTab({currentTarget: document.querySelector('[onclick="openTab(event, \'ficha\')"]')}, 'ficha');
+                }
+            }
         }
 
         // Função para calcular modificadores
@@ -1400,7 +1593,9 @@
                 inteligencia: document.getElementById('inteligencia').value,
                 sabedoria: document.getElementById('sabedoria').value,
                 carisma: document.getElementById('carisma').value,
-                characterImage: characterImage
+                characterImage: characterImage,
+                equipments: equipments,
+                spells: spells
             };
             
             localStorage.setItem('oldDragonCharacter', JSON.stringify(characterData));
@@ -1435,7 +1630,20 @@
                     document.getElementById('character-image-placeholder').style.display = 'none';
                 }
                 
+                // Carregar equipamentos
+                if (characterData.equipments) {
+                    equipments = characterData.equipments;
+                    renderEquipmentList();
+                }
+                
+                // Carregar magias
+                if (characterData.spells) {
+                    spells = characterData.spells;
+                    renderSpellList();
+                }
+                
                 updateCalculations();
+                checkSpecialTabs();
                 alert('Personagem carregado com sucesso!');
             } else {
                 alert('Nenhum personagem salvo encontrado.');
@@ -1533,6 +1741,165 @@
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        // Função para adicionar equipamento
+        function addEquipment() {
+            const name = document.getElementById('new-equipment-name').value;
+            const type = document.getElementById('new-equipment-type').value;
+            const weight = parseFloat(document.getElementById('new-equipment-weight').value) || 0;
+            const bonus = document.getElementById('new-equipment-bonus').value;
+            const description = document.getElementById('new-equipment-description').value;
+            
+            if (!name) {
+                alert('Por favor, insira o nome do equipamento.');
+                return;
+            }
+            
+            const equipment = {
+                id: Date.now(),
+                name: name,
+                type: type,
+                weight: weight,
+                bonus: bonus,
+                description: description
+            };
+            
+            equipments.push(equipment);
+            renderEquipmentList();
+            
+            // Limpar formulário
+            document.getElementById('new-equipment-name').value = '';
+            document.getElementById('new-equipment-type').value = 'arma';
+            document.getElementById('new-equipment-weight').value = '';
+            document.getElementById('new-equipment-bonus').value = '';
+            document.getElementById('new-equipment-description').value = '';
+            
+            updateCalculations();
+        }
+
+        // Função para remover equipamento
+        function removeEquipment(id) {
+            equipments = equipments.filter(item => item.id !== id);
+            renderEquipmentList();
+            updateCalculations();
+        }
+
+        // Função para renderizar lista de equipamentos
+        function renderEquipmentList() {
+            const listElement = document.getElementById('equipment-list');
+            listElement.innerHTML = '';
+            
+            if (equipments.length === 0) {
+                listElement.innerHTML = '<p style="text-align: center; color: #a0a0d0;">Nenhum equipamento adicionado.</p>';
+                return;
+            }
+            
+            equipments.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item-entry';
+                itemElement.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-name">${item.name}</div>
+                        <button class="remove-item" onclick="removeEquipment(${item.id})">Remover</button>
+                    </div>
+                    <div class="item-details">
+                        <div class="item-detail">
+                            <span class="detail-label">Tipo:</span>
+                            <span class="detail-value">${item.type}</span>
+                        </div>
+                        <div class="item-detail">
+                            <span class="detail-label">Peso:</span>
+                            <span class="detail-value">${item.weight} kg</span>
+                        </div>
+                        ${item.bonus ? `
+                        <div class="item-detail">
+                            <span class="detail-label">Bônus:</span>
+                            <span class="detail-value">${item.bonus}</span>
+                        </div>
+                        ` : ''}
+                        ${item.description ? `
+                        <div class="item-detail">
+                            <span class="detail-label">Descrição:</span>
+                            <span class="detail-value">${item.description}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                listElement.appendChild(itemElement);
+            });
+            
+            // Calcular carga total
+            const totalWeight = equipments.reduce((sum, item) => sum + item.weight, 0);
+            document.getElementById('carga-total').textContent = totalWeight.toFixed(1);
+        }
+
+        // Função para adicionar magia
+        function addSpell() {
+            const name = document.getElementById('new-spell-name').value;
+            const circle = document.getElementById('new-spell-circle').value;
+            const range = document.getElementById('new-spell-range').value;
+            const duration = document.getElementById('new-spell-duration').value;
+            const description = document.getElementById('new-spell-description').value;
+            
+            if (!name) {
+                alert('Por favor, insira o nome da magia.');
+                return;
+            }
+            
+            const spell = {
+                id: Date.now(),
+                name: name,
+                circle: circle,
+                range: range,
+                duration: duration,
+                description: description
+            };
+            
+            spells.push(spell);
+            renderSpellList();
+            
+            // Limpar formulário
+            document.getElementById('new-spell-name').value = '';
+            document.getElementById('new-spell-circle').value = '1';
+            document.getElementById('new-spell-range').value = '';
+            document.getElementById('new-spell-duration').value = '';
+            document.getElementById('new-spell-description').value = '';
+        }
+
+        // Função para remover magia
+        function removeSpell(id) {
+            spells = spells.filter(spell => spell.id !== id);
+            renderSpellList();
+        }
+
+        // Função para renderizar lista de magias
+        function renderSpellList() {
+            const listElement = document.getElementById('spell-list');
+            listElement.innerHTML = '';
+            
+            if (spells.length === 0) {
+                listElement.innerHTML = '<p style="text-align: center; color: #a0a0d0; grid-column: 1 / -1;">Nenhuma magia adicionada.</p>';
+                return;
+            }
+            
+            spells.forEach(spell => {
+                const spellElement = document.createElement('div');
+                spellElement.className = 'spell-card';
+                spellElement.innerHTML = `
+                    <div class="spell-header">
+                        <div class="spell-name">${spell.name}</div>
+                        <div class="spell-circle">${spell.circle}º Círculo</div>
+                        <button class="remove-spell" onclick="removeSpell(${spell.id})">X</button>
+                    </div>
+                    <div class="spell-details">
+                        ${spell.range ? `<div class="spell-detail"><strong>Alcance:</strong> ${spell.range}</div>` : ''}
+                        ${spell.duration ? `<div class="spell-detail"><strong>Duração:</strong> ${spell.duration}</div>` : ''}
+                        ${spell.description ? `<div class="spell-detail"><strong>Descrição:</strong> ${spell.description}</div>` : ''}
+                    </div>
+                `;
+                listElement.appendChild(spellElement);
+            });
         }
 
         // Função para atualizar todos os cálculos
@@ -1637,10 +2004,17 @@
             if (pointsSpent > 20) {
                 showPopup();
             }
+            
+            // Renderizar listas
+            renderEquipmentList();
+            renderSpellList();
+            
+            // Verificar tabs especiais
+            checkSpecialTabs();
         }
 
         // Adicionar event listeners para todos os selects
-        document.querySelectorAll('select').forEach(element => {
+        document.querySelectorAll('select, input').forEach(element => {
             // Armazenar o valor anterior antes da mudança
             element.addEventListener('focus', function() {
                 previousValue = this.value;
@@ -1658,6 +2032,9 @@
 
         // Inicializar cálculos
         updateCalculations();
+        
+        // Verificar tabs especiais inicialmente
+        checkSpecialTabs();
     </script>
 </body>
 </html>
